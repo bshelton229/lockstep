@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'lockstep'
+
+# Pass Arguments to the run method
+LockStep::Cli.run(ARGV)
