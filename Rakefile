@@ -14,3 +14,5 @@ task :install => :build do
   puts "Installing lockstep\n"
   system "sudo gem install #{dir}/lockstep-#{LockStep::VERSION}.gem"
 end
+
+task :default => :build
