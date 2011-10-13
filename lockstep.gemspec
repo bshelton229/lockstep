@@ -1,6 +1,9 @@
+$:.unshift File.expand_path('../lib', __FILE__)
+require 'lockstep'
+
 Gem::Specification.new do |s|
   s.name = "lockstep"
-  s.version = "0.1"
+  s.version = LockStep::VERSION
   s.authors = ["Bryan Shelton"]
   s.email = "bshelton2@wisc.edu"
   s.summary = "Sync a local directory with remote directories on file change"

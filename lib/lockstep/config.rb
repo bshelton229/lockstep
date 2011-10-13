@@ -20,8 +20,9 @@ module LockStep
 
     # Load the config file
     def self.load(file)
-      if File.exist? file
-        config = YAML::load( File.open(file) )
+      @config_file = File.expand_path(file)
+      if File.exist? @config_file
+        config = YAML::load( File.open(@config_file) )
         # @TODO: Loads of validation
         @destinations = Array.new
         config['destinations'].each do |server_name, destination|
@@ -43,5 +44,8 @@ module LockStep
       @source_path || false
     end
 
+    def self.config_file
+      @config_file || false
+    end
   end
 end
