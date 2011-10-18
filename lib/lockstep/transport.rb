@@ -5,7 +5,9 @@ module LockStep
       def rsync(wait = false)
         @config ||= LockStep::Config
         @config.destinations.each do |destination|
-          command = "rsync -avz #{@config.source_path}/ "
+          command = "rsync -avz "
+          command << "--delete " if destination.cleanup
+          command << "#{@config.source_path}/ "
           command << "#{destination.user}@" if destination.user and destination.hostname
           command << "#{destination.hostname}:" if destination.hostname
           command << "#{destination.path}/"

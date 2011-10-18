@@ -6,12 +6,14 @@ module LockStep
     attr_reader :hostname
     attr_reader :user
     attr_reader :path
+    attr_reader :cleanup
 
-    def initialize(name, hostname, user, path)
+    def initialize(name, hostname, user, path, cleanup = false)
       @name = name
       @hostname = hostname
       @user = user
       @path = path
+      @cleanup = cleanup
     end
   end
 
@@ -27,7 +29,8 @@ module LockStep
         @destinations = Array.new
         config['destinations'].each do |server_name, destination|
           path = destination['path'].gsub('\/+$', '')
-          @destinations << LockStep::Destination.new(server_name, destination['hostname'], destination['user'], path)
+          cleanup = destination['cleanup'] ? true : false
+          @destinations << LockStep::Destination.new(server_name, destination['hostname'], destination['user'], path, cleanup)
         end
         @source_path = File.expand_path(config['source_path'])
       else
