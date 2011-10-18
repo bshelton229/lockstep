@@ -1,5 +1,5 @@
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'lockstep'
+#require 'lockstep'
 
 desc "Build the gem"
 task :build do
