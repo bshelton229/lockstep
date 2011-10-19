@@ -1,0 +1,8 @@
+# Local origin path
+source_path: /tmp/lockstep/src
+
+# Remote or local destinations
+destinations:
+  local:
+    path: /tmp/lockstep/dest
+    cleanup: true

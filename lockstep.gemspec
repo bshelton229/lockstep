@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
 
   # Gem deps
-  s.add_dependency "daemons"
   s.add_dependency "fssm", "~> 0.2"
   s.add_dependency "net-ssh"
   s.add_dependency "net-scp"

@@ -1,5 +1,4 @@
 require 'optparse'
-require 'daemons'
 
 module LockStep
   class Cli
@@ -30,16 +29,12 @@ module LockStep
           # Start the monitor
           operations.monitor
         else
-          Daemons.daemonize({
-            :log_output => true,
-            :app_name => "lockstep"
-          })
-
-          # The server loop
-          loop {
-            # Pass Arguments to the run method
-            operations.monitor
-          }
+          # Re-direct stdout
+          STDOUT.reopen(File.open("./lockstep.log",'w+'))
+          # Fork the process
+          pid = fork { operations.monitor }
+          Process.detach pid
+          puts "Spawned #{pid}"
         end
 
       else

@@ -8,5 +8,5 @@ require 'fssm'
 Dir[File.expand_path('../lockstep/*.rb',__FILE__)].each {|file| require file }
 
 module LockStep
-  VERSION = "0.1"
+  VERSION = "0.2"
 end
