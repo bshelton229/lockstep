@@ -29,10 +29,9 @@ module LockStep
           # Start the monitor
           operations.monitor
         else
-          # Re-direct stdout
-          STDOUT.reopen(File.open("./lockstep.log",'w+'))
           # Fork the process
           pid = fork { operations.monitor }
+          STDOUT.reopen(File.open("./lockstep-#{pid}.log",'a+'))
           Process.detach pid
           puts "Spawned #{pid}"
         end

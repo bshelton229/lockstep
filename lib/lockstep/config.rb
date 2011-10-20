@@ -6,14 +6,16 @@ module LockStep
     attr_reader :hostname
     attr_reader :user
     attr_reader :path
+    attr_reader :identity_file
     attr_reader :cleanup
 
-    def initialize(name, hostname, user, path, cleanup = false)
+    def initialize(name, opts)
       @name = name
-      @hostname = hostname
-      @user = user
-      @path = path
-      @cleanup = cleanup
+      @hostname = opts['hostname'] || nil
+      @user = opts['user'] || nil
+      @path = opts['path'].gsub('\/+$', '')
+      @identity_file = opts['identity_file'] || nil
+      @cleanup = opts['cleanup'] ? true : false
     end
   end
 
@@ -28,9 +30,7 @@ module LockStep
         # @TODO: Loads of validation
         @destinations = Array.new
         config['destinations'].each do |server_name, destination|
-          path = destination['path'].gsub('\/+$', '')
-          cleanup = destination['cleanup'] ? true : false
-          @destinations << LockStep::Destination.new(server_name, destination['hostname'], destination['user'], path, cleanup)
+          @destinations << LockStep::Destination.new(server_name, destination)
         end
         @source_path = File.expand_path(config['source_path'])
       else
