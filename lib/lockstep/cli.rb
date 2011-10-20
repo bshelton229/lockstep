@@ -14,6 +14,10 @@ module LockStep
         opts.on("-d", "--daemon", "Run as a daemon") do |d|
           options[:daemonize] = d
         end
+        opts.on("-V", "--version", "Lockstep version") do |v|
+          puts "Lockstep: #{LockStep::VERSION}\n"
+          exit 0
+        end
       end
       opts.parse!(args)
 
