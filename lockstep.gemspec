@@ -1,5 +1,5 @@
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'lockstep/version'
+require 'lockstep'
 
 Gem::Specification.new do |s|
   s.name = "lockstep"
