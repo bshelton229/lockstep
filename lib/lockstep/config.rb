@@ -21,8 +21,7 @@ module LockStep
 
   # Config class
   class Config
-
-    # Load the config file
+    # Load the configuration file
     def self.load(file)
       @config_file = File.expand_path(file)
       if File.exist? @config_file
