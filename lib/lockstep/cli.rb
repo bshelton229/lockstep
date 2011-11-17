@@ -25,21 +25,20 @@ module LockStep
       if options[:config_file]
         LockStep::Config.load(options[:config_file])
         operations = LockStep::Operations.new
-
-        # Run an initial sync
-        # operations.sync
-
+        # To fork or not to fork
         if not options[:daemonize]
           # Start the monitor
           operations.monitor
         else
+          log_file = File.join(Dir.getwd, 'lockstep.log')
+          # Set the log_file destination in Config
+          LockStep::Config.output = log_file
           # Fork the process
           pid = fork { operations.monitor }
-          STDOUT.reopen(File.open("./lockstep-#{pid}.log",'a+'))
+          STDOUT.reopen(File.open(LockStep::Config.output,'a+'))
           Process.detach pid
           puts "Spawned #{pid}"
         end
-
       else
         puts "You must supply a config file\n"
         exit 2

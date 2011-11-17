@@ -38,6 +38,15 @@ module LockStep
       end
     end
 
+    # Set the output to a file
+    def self.output=(output)
+      @output = output
+    end
+
+    def self.output
+      @output || false
+    end
+
     def self.destinations
       @destinations || false
     end

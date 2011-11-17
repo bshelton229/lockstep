@@ -25,6 +25,8 @@ module LockStep
           # A little latency
           sleep 1 if wait
 
+          # Re-direct stdout to the log file if we're meant to
+          STDOUT.reopen(File.open(LockStep::Config.output,'a+')) if LockStep::Config.output
           # Run the command
           system command
         end
