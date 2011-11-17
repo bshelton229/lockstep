@@ -31,6 +31,11 @@ module LockStep
           operations.monitor
         else
           log_file = File.join(Dir.getwd, 'lockstep.log')
+          # Bail if we can't write to the log file
+          if not File.writable? log_file
+            puts "Cannot write to the log file: #{log_file}"
+            exit 1
+          end
           # Set the log_file destination in Config
           LockStep::Config.output = log_file
           # Fork the process
