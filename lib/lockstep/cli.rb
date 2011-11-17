@@ -5,15 +5,22 @@ module LockStep
     # Run the CLI
     def self.run(args)
       # Default options
-      options = { :config_file => false, :daemonize => false }
+      options = { :config_file => false, :daemonize => false, :log_file => File.join(Dir.getwd, 'lockstep.log') }
       # Parse arguments
       opts = OptionParser.new do |opts|
+        # Specify the config file (mandatory)
         opts.on("-f CONFIG_FILE", "--config-file CONFIG_FILE", "Specify a config file", String) do |f|
           options[:config_file] = f
         end
+        # Specify the log file to write to
+        opts.on("-l LOG_FILE", "--log-file LOG_FILE", "Specify a log file", String) do |log_file|
+          options[:log_file] = File.expand_path(log_file)
+        end
+        # Run as a daemon
         opts.on("-d", "--daemon", "Run as a daemon") do |d|
           options[:daemonize] = d
         end
+        # Show the version and exit 0
         opts.on("-V", "--version", "Lockstep version") do |v|
           puts "Lockstep: #{LockStep::VERSION}\n"
           exit 0
@@ -30,9 +37,9 @@ module LockStep
           # Start the monitor
           operations.monitor
         else
-          log_file = File.join(Dir.getwd, 'lockstep.log')
+          log_file = options[:log_file]
           # Bail if we can't write to the log file
-          if not File.writable? log_file
+          if not File.writable? File.dirname(log_file)
             puts "Cannot write to the log file: #{log_file}"
             exit 1
           end
