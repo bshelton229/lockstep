@@ -6,11 +6,16 @@ module LockStep
       # Send using net/ssh and net/scp
       def send(base, relative)
         @config ||= LockStep::Config
+        # Re-direct stdout to the log file if we're meant to
+        STDOUT.reopen(File.open(LockStep::Config.output,'a+')) if LockStep::Config.output
+        # Grab our full filename
         full = "#{base}/#{relative}"
         return true if not File.file?(full)
         puts "Attempting to upload: #{full}\n"
         @config.destinations.each do |destination|
-          Net::SSH.start(destination.hostname, destination.user) do |ssh|
+          ssh_options = Hash.new
+          ssh_options[:keys] = [destination.identity_file] if not destination.identity_file.nil?
+          Net::SSH.start(destination.hostname, destination.user, ssh_options) do |ssh|
             ssh.exec! "mkdir -p #{destination.path}/#{File.dirname(relative)}"
             ssh.scp.upload! "#{base}/#{relative}", "#{destination.path}/#{relative}"
           end
@@ -19,7 +24,7 @@ module LockStep
         puts "Caught #{e}"
       end
 
-      # Run an Rsync of local_path to each remote server
+      # Rsync if syncing is enabled
       def rsync(wait = false)
         @config ||= LockStep::Config
         @config.destinations.each do |destination|
