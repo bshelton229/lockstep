@@ -15,9 +15,9 @@ module LockStep
       operations = self
       # Run the monitor
       FSSM.monitor(@config.source_path) do
-        update {|base, relative| LockStep::Transport.rsync(true) }
-        delete {|base, relative| LockStep::Transport.rsync(true) }
-        create {|base, relative| LockStep::Transport.rsync(true) }
+        update {|base, relative| LockStep::Transport.send(base, relative) }
+        # delete {|base, relative| LockStep::Transport.send(base, relative, true) }
+        create {|base, relative| LockStep::Transport.send(base, relative) }
       end
     end
 

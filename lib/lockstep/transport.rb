@@ -1,6 +1,24 @@
+require 'net/ssh'
+require 'net/scp'
 module LockStep
   class Transport
     class << self
+      # Send using net/ssh and net/scp
+      def send(base, relative)
+        @config ||= LockStep::Config
+        full = "#{base}/#{relative}"
+        return true if not File.file?(full)
+        puts "Attempting to upload: #{full}\n"
+        @config.destinations.each do |destination|
+          Net::SSH.start(destination.hostname, destination.user) do |ssh|
+            ssh.exec! "mkdir -p #{destination.path}/#{File.dirname(relative)}"
+            ssh.scp.upload! "#{base}/#{relative}", "#{destination.path}/#{relative}"
+          end
+        end
+      rescue Exception => e
+        puts "Caught #{e}"
+      end
+
       # Run an Rsync of local_path to each remote server
       def rsync(wait = false)
         @config ||= LockStep::Config
