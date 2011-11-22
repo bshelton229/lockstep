@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "fssm", "~> 0.2"
   s.add_runtime_dependency "net-ssh"
   s.add_runtime_dependency "net-scp"
+  s.add_runtime_dependency "net-sftp"
 
   s.add_development_dependency "rspec"
 end
