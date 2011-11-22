@@ -28,7 +28,7 @@ module LockStep
           end
         end
       rescue Exception => e
-        puts "Caught #{e}"
+        LockStep::Logger.write "Caught #{e}"
       end
 
       # Rsync if syncing is enabled
@@ -60,6 +60,8 @@ module LockStep
           # Run the command
           system command
         end
+      rescue Exception => e
+        LockStep::Logger.write "Caught #{e}"
       end
     end
   end
