@@ -3,4 +3,8 @@ require 'rubygems'
 require 'lockstep'
 
 # Pass Arguments to the run method
-LockStep::Cli.run(ARGV)
+begin
+  LockStep::Cli.run(ARGV)
+rescue Exception => e
+  LockStep::Logger.write "Caught: #{e}"
+end

@@ -4,19 +4,27 @@ module LockStep
   class Transport
     class << self
       # Send using net/ssh and net/scp
-      def send(base, relative)
+      def scp(base, relative)
         @config ||= LockStep::Config
         # Grab our full filename
         full = "#{base}/#{relative}"
-        return true if not File.file?(full)
+        # Bail if full doesn't relsolve to a real file
+        return false if not File.file?(full)
+        # Detect .sync trigger
+        if File.basename(full).eql?('__sync')
+          File.unlink full
+          LockStep::Logger.write "Sync trigger detected, running rysnc"
+          self.rsync
+          return true
+        end
         # Log what we're doing
-        LockStep::Logger.write "Attempting to upload: #{full}\n"
+        LockStep::Logger.write "Attempting to upload: #{full}"
         @config.destinations.each do |destination|
           ssh_options = Hash.new
           ssh_options[:keys] = [destination.identity_file] if not destination.identity_file.nil?
           Net::SSH.start(destination.hostname, destination.user, ssh_options) do |ssh|
             ssh.exec! "mkdir -p #{destination.path}/#{File.dirname(relative)}"
-            ssh.scp.upload! "#{base}/#{relative}", "#{destination.path}/#{relative}"
+            ssh.scp.upload! full, "#{destination.path}/#{relative}"
           end
         end
       rescue Exception => e
@@ -48,7 +56,7 @@ module LockStep
           sleep 1 if wait
 
           # Re-direct stdout to the log file if we're meant to
-          STDOUT.reopen(File.open(LockStep::Config.output,'a+')) if LockStep::Config.output
+          LockStep::Logger.redirect_stdout
           # Run the command
           system command
         end
