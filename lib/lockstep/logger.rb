@@ -4,7 +4,7 @@ module LockStep
       def write(message)
         @config ||= LockStep::Config
         if log_file = @config.output
-          File.open(log_file, 'a+') {|f| f.write(message + "\n") }
+          File.open(log_file, 'a+') {|f| f.write("[#{Time.now}] #{message}\n") }
         else
           puts message
         end
