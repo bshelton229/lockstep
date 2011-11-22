@@ -2,7 +2,6 @@ require 'rbconfig'
 
 module LockStep
   class Operations
-
     def initialize
       @config = LockStep::Config
       @latency = 1
@@ -20,6 +19,5 @@ module LockStep
         # delete {|base, relative| LockStep::Transport.send(base, relative, true) }
       end
     end
-
   end
 end

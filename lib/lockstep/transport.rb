@@ -10,7 +10,7 @@ module LockStep
         full = "#{base}/#{relative}"
         # Bail if full doesn't relsolve to a real file
         return false if not File.file?(full)
-        # Detect .sync trigger
+        # Detect __sync trigger
         if File.basename(full).eql?('__sync')
           File.unlink full
           LockStep::Logger.write "Sync trigger detected, running rysnc"
