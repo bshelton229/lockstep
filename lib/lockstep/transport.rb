@@ -6,12 +6,11 @@ module LockStep
       # Send using net/ssh and net/scp
       def send(base, relative)
         @config ||= LockStep::Config
-        # Re-direct stdout to the log file if we're meant to
-        STDOUT.reopen(File.open(LockStep::Config.output,'a+')) if LockStep::Config.output
         # Grab our full filename
         full = "#{base}/#{relative}"
         return true if not File.file?(full)
-        puts "Attempting to upload: #{full}\n"
+        # Log what we're doing
+        LockStep::Logger.write "Attempting to upload: #{full}\n"
         @config.destinations.each do |destination|
           ssh_options = Hash.new
           ssh_options[:keys] = [destination.identity_file] if not destination.identity_file.nil?

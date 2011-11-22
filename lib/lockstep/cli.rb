@@ -47,9 +47,8 @@ module LockStep
           LockStep::Config.output = log_file
           # Fork the process
           pid = fork { operations.monitor }
-          STDOUT.reopen(File.open(LockStep::Config.output,'a+'))
           Process.detach pid
-          puts "Spawned #{pid}"
+          LockStep::Logger.write "Spawned #{pid}"
         end
       else
         puts "You must supply a config file\n"
